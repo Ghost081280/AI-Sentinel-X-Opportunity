@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Sentinel-X | Autonomous Cyber Defense</title>
+    <meta name="description" content="Self-operating AI defense agent with manual override and hybrid post-quantum encryption. Try the live demo or review our investor deck.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00ff88;
+            --secondary: #00ccff;
+            --accent: #7c3aed;
+            --danger: #ff0044;
+            --warning: #ffaa00;
+            --success: #00ff88;
+            --bg-dark: #0a0e1a;
+            --bg-darker: #060912;
+            --bg-card: rgba(10, 20, 40, 0.8);
+            --border: rgba(0, 255, 136, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: #8892b0;
+            --gradient-1: linear-gradient(135deg, #00ff88 0%, #00ccff 100%);
+            --gradient-2: linear-gradient(135deg, #7c3aed 0%, #00ccff 100%);
+            --gradient-shield: linear-gradient(135deg, #1a4d2e 0%, #00ff88 50%, #00ccff 100%);
+            --gradient-hybrid: linear-gradient(135deg, #00ff88 0%, #7c3aed 50%, #00ccff 100%);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Consolas', 'Monaco', monospace;
+            background: var(--bg-darker);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Neural Network Background Canvas */
+        #neuralCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        /* Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 25px 35px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        /* Logo */
+        .logo-container {
+            width: 60px;
+            height: 60px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-shield {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-shield);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            position: relative;
+            animation: shieldPulse 4s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes shieldPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
+        .logo-eye {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: var(--bg-darker);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-iris {
+            width: 16px;
+            height: 16px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.6);
+        }
+
+        .rotating-dots {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            animation: rotate 12s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .dot {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 4px var(--primary);
+        }
+
+        .dot:nth-child(1) { top: 0; left: 50%; transform: translateX(-50%); }
+        .dot:nth-child(2) { top: 50%; right: 0; transform: translateY(-50%); }
+        .dot:nth-child(3) { bottom: 0; left: 50%; transform: translateX(-50%); }
+
+        .brand-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-name {
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .brand-tagline {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        /* Encryption Status Badge */
+        .encryption-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .status-light {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 8px var(--success);
+            animation: statusPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        /* Sections */
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 60px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.05), transparent);
+            animation: sectionScan 15s linear infinite;
+        }
+
+        @keyframes sectionScan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .section-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 80px 60px;
+        }
+
+        .hero h1 {
+            font-size: 56px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+            line-height: 1.2;
+        }
+
+        .hero .subtitle {
+            font-size: 24px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.4;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 60px;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn {
+            background: var(--gradient-1);
+            border: none;
+            border-radius: 15px;
+            padding: 18px 36px;
+            color: var(--bg-darker);
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.3);
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 255, 136, 0.4);
+        }
+
+        .cta-btn.secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .cta-btn.secondary:hover {
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        /* Micro Metrics */
+        .micro-metrics {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .metric {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .metric:hover {
+            background: rgba(0, 255, 136, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.2);
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Feature Cards Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.05) 0%, rgba(0, 0, 0, 0.4) 100%);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.2);
+            border-color: var(--primary);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .feature-card:hover::before {
+            left: 100%;
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 10px currentColor);
+        }
+
+        .feature-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Competitive Edge Tiles */
+        .edge-tiles {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .edge-tile {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .edge-tile:hover {
+            background: rgba(0, 255, 136, 0.05);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .edge-tile-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 5px currentColor);
+        }
+
+        .edge-tile-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .edge-tile-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Traction Section */
+        .traction-content {
+            text-align: center;
+        }
+
+        .demo-credentials {
+            background: rgba(124, 58, 237, 0.1);
+            border: 1px solid var(--accent);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .credentials-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .credentials-list {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .credential-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .credential-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .credential-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text-primary);
+            font-family: monospace;
+        }
+
+        /* Business Model */
+        .model-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .model-card {
+            background: linear-gradient(135deg, rgba(0, 204, 255, 0.05) 0%, rgba(0, 0, 0, 0.4) 100%);
+            border: 1px solid rgba(0, 204, 255, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .model-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 204, 255, 0.2);
+            border-color: var(--secondary);
+        }
+
+        .model-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--secondary);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(15px);
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--primary);
+        }
+
+        .footer-note {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 20px;
+            font-style: italic;
+        }
+
+        /* Section Headers */
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: 42px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Large Stats */
+        .big-stat {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .big-stat-value {
+            font-size: 72px;
+            font-weight: bold;
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        .big-stat-label {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .section {
+                padding: 40px 30px;
+            }
+            
+            .hero {
+                padding: 60px 30px;
+            }
+            
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .hero .subtitle {
+                font-size: 18px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .nav-links {
+                justify-content: center;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .micro-metrics {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .model-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .edge-tiles {
+                grid-template-columns: 1fr;
+            }
+            
+            .credentials-list {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .section-title {
+                font-size: 32px;
+            }
+            
+            .big-stat-value {
+                font-size: 48px;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        /* High Impact CTAs */
+        .highlight-cta {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--bg-darker);
+            padding: 20px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.4);
+        }
+
+        .highlight-cta:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 255, 136, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <!-- Neural Network Background -->
+    <canvas id="neuralCanvas"></canvas>
+
+    <!-- Container -->
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="logo-container">
+                        <div class="rotating-dots">
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </div>
+                        <div class="logo-shield">
+                            <div class="logo-eye">
+                                <div class="logo-iris"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="brand-info">
+                        <h1 class="brand-name">AI SENTINEL-X</h1>
+                        <p class="brand-tagline">Autonomous Cyber Defense</p>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="encryption-badge">
+                        <div class="status-light"></div>
+                        <span>HYBRID MODE ACTIVE</span>
+                    </div>
+                    <nav class="nav-links">
+                        <a href="#demo" class="nav-link">Demo</a>
+                        <a href="#investors" class="nav-link">Investors</a>
+                        <a href="#contact" class="nav-link">Contact</a>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="section hero" id="hero">
+            <div class="section-content">
+                <h1>AI Sentinel-X<br>Autonomous Cyber Defense</h1>
+                <p class="subtitle">Self-operating defense agent with manual override and hybrid (post-quantum + classical) encryption protecting your infrastructure 24/7.</p>
+                
+                <div class="cta-buttons">
+                    <a href="https://ghost081280.github.io/AI-Sentinel-X-Demo-v4/" class="cta-btn" target="_blank">
+                        <span>🚀</span>
+                        <span>Try the Live Demo</span>
+                    </a>
+                    <a href="#investors" class="cta-btn secondary">
+                        <span>📊</span>
+                        <span>Investor Deck</span>
+                    </a>
+                </div>
+
+                <div class="micro-metrics">
+                    <div class="metric">
+                        <div class="metric-value">99.7%</div>
+                        <div class="metric-label">Detection Rate</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">0.31s</div>
+                        <div class="metric-label">Avg Response</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">99.98%</div>
+                        <div class="metric-label">Uptime</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Problem & Opportunity -->
+        <section class="section" id="problem">
+            <div class="section-content">
+                <div class="section-header">
+                    <h2 class="section-title">The $10 Trillion Problem</h2>
+                    <p class="section-subtitle">Cyberattacks are projected to exceed $10.5 trillion annually by 2025. Human analysts can't match AI-level speed and scale. Organizations need autonomous, explainable defense that works 24/7.</p>
+                </div>
+
+                <div class="big-stat">
+                    <div class="big-stat-value">$10.5T</div>
+                    <div class="big-stat-label">Annual Cybercrime Damage by 2025</div>
+                </div>
+
+                <p style="text-align: center; font-size: 18px; color: var(--text-secondary); margin-top: 40px;">
+                    Traditional security solutions are reactive, require constant human oversight, and can't scale to modern threat volumes. <strong style="color: var(--primary);">AI Sentinel-X changes everything.</strong>
+                </p>
+            </div>
+        </section>
+
+        <!-- The Solution -->
+        <section class="section" id="solution">
+            <div class="section-content">
+                <div class="section-header">
+                    <h2 class="section-title">The Solution</h2>
+                    <p class="section-subtitle">Autonomous AI defense with specialized sub-agents, hybrid-resistant encryption, and human-controlled manual override.</p>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🛡️</div>
+                        <h3 class="feature-title">Autonomous Detection & Response</h3>
+                        <p class="feature-description">AI-powered threat detection with automated response in under 0.31 seconds. Learns and adapts to new attack patterns without human intervention.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🤖</div>
+                        <h3 class="feature-title">Specialized Sub-Agents</h3>
+                        <p class="feature-description">NetworkMapper, ThreatScanner, EncryptionManager, VPNMonitor, and more. Each sub-agent specializes in specific security domains for comprehensive coverage.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🔐</div>
+                        <h3 class="feature-title">Hybrid-Resistant Encryption</h3>
+                        <p class="feature-description">Combines post-quantum algorithms (Kyber-1024, Dilithium-3) with proven classical encryption (AES-256, ChaCha20) for future-proof security.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">💬</div>
+                        <h3 class="feature-title">Manual Override via AI Chat</h3>
+                        <p class="feature-description">Full manual control through natural language chat interface. Works offline via CLI fallback when external APIs are unavailable.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Competitive Edge -->
+        <section class="section" id="edge">
+            <div class="section-content">
+                <div class="section-header">
+                    <h2 class="section-title">Competitive Edge</h2>
+                    <p class="section-subtitle">What makes AI Sentinel-X different from traditional security solutions.</p>
+                </div>
+
+                <div class="edge-tiles">
+                    <div class="edge-tile">
+                        <div class="edge-tile-icon">🏠</div>
+                        <h3 class="edge-tile-title">Local-First Architecture</h3>
+                        <p class="edge-tile-description">Operates independently with cloud assistance. Your data stays protected even when disconnected.</p>
+                    </div>
+
+                    <div class="edge-tile">
+                        <div class="edge-tile-icon">⚡</div>
+                        <h3 class="edge-tile-title">Modular Sub-Agents</h3>
+                        <p class="edge-tile-description">Deploy only what you need. Scale from single servers to enterprise infrastructure with specialized agents.</p>
+                    </div>
+
+                    <div class="edge-tile">
+                        <div class="edge-tile-icon">📊</div>
+                        <h3 class="edge-tile-title">Explainable AI</h3>
+                        <p class="edge-tile-description">Complete audit trail with detailed decision explanations. Meet compliance requirements with transparent AI reasoning.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Traction & Demo Access -->
+        <section class="section" id="demo">
+            <div class="section-content">
+                <div class="section-header">
+                    <h2 class="section-title">Experience the Demo</h2>
+                    <p class="section-subtitle">See AI Sentinel-X in action with our fully interactive demo environment.</p>
+                </div>
+
+                <div class="traction-content">
+                    <div class="demo-credentials">
+                        <h3 class="credentials-title">🔑 Demo Access Credentials</h3>
+                        <div class="credentials-list">
+                            <div class="credential-item">
+                                <div class="credential-label">Email</div>
+                                <div class="credential-value">demo@demo.com</div>
+                            </div>
+                            <div class="credential-item">
+                                <div class="credential-label">Password</div>
+                                <div class="credential-value">demo</div>
+                            </div>
+                            <div class="credential-item">
+                                <div class="credential-label">2FA Code</div>
+                                <div class="credential-value">123456</div>
+                            </div>
+                        </div>
+                        <p style="font-size: 14px; color: var(--text-secondary); margin-top: 15px;">
+                            Full access to all modules including NetworkMapper, ThreatScanner, EncryptionManager, and VPNMonitor.
+                        </p>
+                    </div>
+
+                    <a href="https://ghost081280.github.io/AI-Sentinel-X-Demo-v4/" class="highlight-cta" target="_blank">
+                        Launch the Demo Environment
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Business Model & Market -->
+        <section class="section" id="investors">
+            <div class="section-content">
+                <div class="section-header">
+                    <h2 class="section-title">Business Model & Market</h2>
+                    <p class="section-subtitle">Scalable SaaS model targeting the $200B+ cybersecurity market.</p>
+                </div>
+
+                <div class="model-grid">
+                    <div class="model-card">
+                        <h3 class="model-title">Target Segments</h3>
+                        <ul style="color: var(--text-secondary); margin-top: 15px; line-height: 2;">
+                            <li><strong>SMB to Enterprise:</strong> 10-10,000+ endpoints</li>
+                            <li><strong>Managed Service Providers:</strong> Multi-tenant deployment</li>
+                            <li><strong>Critical Infrastructure:</strong> Power, water, transportation</li>
+                            <li><strong>Government & Defense:</strong> Air-gapped environments</li>
+                        </ul>
+                    </div>
+
+                    <div class="model-card">
+                        <h3 class="model-title">Pricing Model</h3>
+                        <ul style="color: var(--text-secondary); margin-top: 15px; line-height: 2;">
+                            <li><strong>Single Server:</strong> $29/mo + $0.10/endpoint</li>
+                            <li><strong>Small Business:</strong> $149/mo + $0.08/endpoint</li>
+                            <li><strong>Enterprise:</strong> $499/mo + $0.05/endpoint</li>
+                            <li><strong>Custom:</strong> Air-gapped and compliance pricing</li>
+                        </ul>
+                    </div>
+
+                    <div class="model-card">
+                        <h3 class="model-title">Market Opportunity</h3>
+                        <ul style="color: var(--text-secondary); margin-top: 15px; line-height: 2;">
+                            <li><strong>TAM:</strong> $200B+ cybersecurity market</li>
+                            <li><strong>SAM:</strong> $45B autonomous security solutions</li>
+                            <li><strong>SOM:</strong> $2.8B AI-powered SMB/Enterprise</li>
+                            <li><strong>Growth:</strong> 15% CAGR through 2030</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 50px;">
+                    <a href="#contact" class="cta-btn">
+                        <span>📈</span>
+                        <span>Request Investor Deck</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer" id="contact">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="https://github.com/ghost081280/AI-Sentinel-X-Demo-v4" class="footer-link" target="_blank">GitHub Repository</a>
+                    <a href="mailto:ai-sentinel-x@wolfberry.llc" class="footer-link">Contact: ai-sentinel-x@wolfberry.llc</a>
+                    <span class="footer-link">© 2024 Wolfberry LLC</span>
+                </div>
+            </div>
+            <p class="footer-note">
+                AI Sentinel-X is currently in active development. The demo showcases core functionality with simulated data.
+                All encryption implementations and security measures are production-ready prototypes.
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Neural Network Background Animation
+        function initNeuralBackground() {
+            const canvas = document.getElementById('neuralCanvas');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            let animationId;
+            
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            
+            resizeCanvas();
+            
+            const nodes = [];
+            const nodeCount = Math.min(80, Math.floor((canvas.width * canvas.height) / 20000));
+            
+            // Create nodes
+            for (let i = 0; i < nodeCount; i++) {
+                nodes.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    radius: Math.random() * 2 + 1,
+                    activity: Math.random()
+                });
+            }
+            
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Update nodes
+                nodes.forEach(node => {
+                    node.x += node.vx;
+                    node.y += node.vy;
+                    node.activity = Math.sin(Date.now() * 0.001 + node.x * 0.01) * 0.5 + 0.5;
+                    
+                    // Boundary collision
+                    if (node.x < 0 || node.x > canvas.width) node.vx *= -1;
+                    if (node.y < 0 || node.y > canvas.height) node.vy *= -1;
+                });
+                
+                // Draw connections
+                ctx.strokeStyle = 'rgba(0, 255, 136, 0.1)';
+                ctx.lineWidth = 0.5;
+                
+                for (let i = 0; i < nodes.length; i++) {
+                    for (let j = i + 1; j < nodes.length; j++) {
+                        const node1 = nodes[i];
+                        const node2 = nodes[j];
+                        const dist = Math.hypot(node1.x - node2.x, node1.y - node2.y);
+                        
+                        if (dist < 120) {
+                            const opacity = (1 - dist / 120) * 0.3;
+                            ctx.globalAlpha = opacity;
+                            ctx.beginPath();
+                            ctx.moveTo(node1.x, node1.y);
+                            ctx.lineTo(node2.x, node2.y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+                
+                // Draw nodes
+                ctx.globalAlpha = 1;
+                nodes.forEach(node => {
+                    const intensity = node.activity;
+                    const gradient = ctx.createRadialGradient(
+                        node.x, node.y, 0, 
+                        node.x, node.y, node.radius * 2
+                    );
+                    gradient.addColorStop(0, `rgba(0, 255, 136, ${intensity * 0.8 + 0.2})`);
+                    gradient.addColorStop(1, 'rgba(0, 255, 136, 0)');
+                    
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, node.radius * (intensity * 0.5 + 1), 0, Math.PI * 2);
+                    ctx.fill();
+                });
+                
+                animationId = requestAnimationFrame(animate);
+            }
+            
+            animate();
+            
+            window.addEventListener('resize', resizeCanvas);
+        }
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Initialize neural background on load
+        document.addEventListener('DOMContentLoaded', () => {
+            initNeuralBackground();
+            
+            // Add entrance animations
+            const sections = document.querySelectorAll('.section');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-in');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+
+        // Demo link tracking
+        document.querySelectorAll('a[href*="ghost081280.github.io"]').forEach(link => {
+            link.addEventListener('click', () => {
+                // Track demo access
+                console.log('Demo accessed from landing page');
+            });
+        });
+    </script>
+</body>
+</html>
