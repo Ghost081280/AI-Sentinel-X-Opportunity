@@ -57,22 +57,20 @@
             position: relative;
             width: 100%;
             background: var(--bg-card);
-            border-bottom: 1px solid var(--border);
-            padding: 20px;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 25px 35px;
             backdrop-filter: blur(15px);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
             z-index: 100;
-            margin-bottom: 20px;
+            margin: 20px auto;
+            max-width: 1360px;
         }
 
         .header-inner {
             max-width: 1360px;
             margin: 0 auto;
-            background: rgba(10, 20, 40, 0.9);
-            border: 1px solid var(--border);
-            border-radius: 15px;
-            padding: 20px 30px;
-            backdrop-filter: blur(15px);
+            padding: 0;
         }
 
         .header-content {
@@ -1235,12 +1233,8 @@
         @media (max-width: 768px) {
             /* Header Mobile Optimization */
             .header {
-                padding: 15px 10px;
-                margin-bottom: 15px;
-            }
-
-            .header-inner {
-                padding: 15px 20px;
+                padding: 20px;
+                margin: 10px;
                 border-radius: 10px;
             }
 
