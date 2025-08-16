@@ -52,31 +52,30 @@
             opacity: 0.3;
         }
 
-        /* Container */
-        .container {
-            position: relative;
-            z-index: 1;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-            padding-top: 140px; /* Account for fixed header */
-        }
-
-        /* Header - BULLETPROOF FIXED TO TOP */
+        /* Header - FIXED POSITIONING OUTSIDE CONTAINER */
         .header {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            width: 100% !important;
             background: var(--bg-card) !important;
-            border: 1px solid var(--border);
-            border-radius: 15px;
-            padding: 25px 35px;
+            border-bottom: 1px solid var(--border);
+            padding: 20px;
             backdrop-filter: blur(15px);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            position: fixed !important;
-            top: 20px !important;
-            left: 50% !important;
-            transform: translateX(-50%) !important;
-            width: calc(100% - 40px) !important;
+            z-index: 10000 !important;
+            max-height: 120px;
+        }
+
+        .header-inner {
             max-width: 1360px;
-            z-index: 9999 !important;
+            margin: 0 auto;
+            background: rgba(10, 20, 40, 0.9);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 20px 30px;
+            backdrop-filter: blur(15px);
         }
 
         .header-content {
@@ -250,14 +249,12 @@
             font-size: 24px;
             cursor: pointer;
             padding: 5px;
-            position: relative !important;
-            z-index: 10000 !important;
         }
 
         .mobile-nav {
             display: none;
-            position: absolute !important;
-            top: 100% !important;
+            position: absolute;
+            top: 100%;
             left: 0;
             right: 0;
             background: var(--bg-card);
@@ -266,7 +263,7 @@
             margin-top: 10px;
             padding: 20px;
             backdrop-filter: blur(15px);
-            z-index: 10001 !important;
+            z-index: 10001;
         }
 
         .mobile-nav.active {
@@ -312,6 +309,16 @@
             font-weight: bold;
             text-transform: uppercase;
             margin-top: 15px;
+        }
+
+        /* Container - NOW POSITIONED BELOW HEADER */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-top: 140px; /* Account for fixed header */
         }
 
         /* Sections */
@@ -1230,22 +1237,15 @@
 
         /* Mobile Responsive - Portrait Mode Optimized */
         @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-                padding-top: 180px; /* Increased for mobile header height */
-            }
-            
-            /* Header Mobile Optimization - BULLETPROOF FIXED */
+            /* Header Mobile Optimization */
             .header {
-                position: fixed !important;
-                top: 10px !important;
-                left: 10px !important;
-                right: 10px !important;
-                width: calc(100% - 20px) !important;
-                transform: none !important;
-                padding: 20px;
-                z-index: 9999 !important;
-                max-width: none;
+                padding: 15px 10px;
+                max-height: 140px;
+            }
+
+            .header-inner {
+                padding: 15px 20px;
+                border-radius: 10px;
             }
 
             .header-content {
@@ -1323,6 +1323,11 @@
                 padding: 8px 12px;
             }
 
+            .container {
+                padding: 10px;
+                padding-top: 160px; /* Increased for mobile header height */
+            }
+            
             /* Section Mobile Optimization */
             .section {
                 padding: 30px 20px;
@@ -1573,10 +1578,9 @@
     <!-- Neural Network Background -->
     <canvas id="neuralCanvas"></canvas>
 
-    <!-- Container -->
-    <div class="container">
-        <!-- Header - FIXED TO TOP -->
-        <header class="header">
+    <!-- Header - FIXED OUTSIDE CONTAINER -->
+    <header class="header">
+        <div class="header-inner">
             <div class="header-content">
                 <div class="header-left">
                     <div class="logo-container">
@@ -1620,8 +1624,11 @@
                     <span>HYBRID MODE ACTIVE</span>
                 </div>
             </nav>
-        </header>
+        </div>
+    </header>
 
+    <!-- Container - NOW POSITIONED BELOW HEADER -->
+    <div class="container">
         <!-- Hero Section -->
         <section class="section hero" id="hero">
             <div class="section-content">
