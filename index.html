@@ -59,6 +59,7 @@
             max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
+            padding-top: 140px; /* Account for fixed header */
         }
 
         /* Header */
@@ -70,8 +71,12 @@
             margin-bottom: 30px;
             backdrop-filter: blur(15px);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            position: sticky;
+            position: fixed;
             top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 40px);
+            max-width: 1360px;
             z-index: 100;
         }
 
