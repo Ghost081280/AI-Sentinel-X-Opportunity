@@ -62,7 +62,7 @@
             padding-top: 140px; /* Account for fixed header */
         }
 
-        /* Header */
+        /* Header - FIXED TO TOP */
         .header {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -76,7 +76,7 @@
             transform: translateX(-50%);
             width: calc(100% - 40px);
             max-width: 1360px;
-            z-index: 100;
+            z-index: 1000;
         }
 
         .header-content {
@@ -1230,14 +1230,20 @@
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
+                padding-top: 180px; /* Increased for mobile header height */
             }
             
-            /* Header Mobile Optimization */
+            /* Header Mobile Optimization - KEEP FIXED */
             .header {
-                padding: 20px;
-                margin-bottom: 20px;
+                position: fixed;
                 top: 10px;
-                position: relative;
+                left: 10px;
+                right: 10px;
+                width: calc(100% - 20px);
+                transform: none;
+                padding: 20px;
+                z-index: 1000;
+                max-width: none;
             }
 
             .header-content {
@@ -1567,7 +1573,7 @@
 
     <!-- Container -->
     <div class="container">
-        <!-- Header -->
+        <!-- Header - FIXED TO TOP -->
         <header class="header">
             <div class="header-content">
                 <div class="header-left">
@@ -2239,6 +2245,7 @@
                 </div>
             </div>
         </section>
+        
         <footer class="footer" id="contact">
             <div class="footer-content">
                 <div class="footer-links">
