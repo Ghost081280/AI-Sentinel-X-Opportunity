@@ -55,7 +55,7 @@
         /* Header - NORMAL POSITIONING */
         .header {
             position: relative;
-            width: 100%;
+            width: calc(100% - 40px);
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 15px;
@@ -1233,8 +1233,9 @@
         @media (max-width: 768px) {
             /* Header Mobile Optimization */
             .header {
+                width: calc(100% - 20px);
                 padding: 20px;
-                margin: 10px;
+                margin: 10px auto;
                 border-radius: 10px;
             }
 
