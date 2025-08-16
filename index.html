@@ -52,20 +52,17 @@
             opacity: 0.3;
         }
 
-        /* Header - FIXED POSITIONING OUTSIDE CONTAINER */
+        /* Header - NORMAL POSITIONING */
         .header {
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            width: 100% !important;
-            background: var(--bg-card) !important;
+            position: relative;
+            width: 100%;
+            background: var(--bg-card);
             border-bottom: 1px solid var(--border);
             padding: 20px;
             backdrop-filter: blur(15px);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            z-index: 10000 !important;
-            max-height: 120px;
+            z-index: 100;
+            margin-bottom: 20px;
         }
 
         .header-inner {
@@ -263,7 +260,7 @@
             margin-top: 10px;
             padding: 20px;
             backdrop-filter: blur(15px);
-            z-index: 10001;
+            z-index: 101;
         }
 
         .mobile-nav.active {
@@ -311,14 +308,13 @@
             margin-top: 15px;
         }
 
-        /* Container - NOW POSITIONED BELOW HEADER */
+        /* Container - NORMAL POSITIONING */
         .container {
             position: relative;
             z-index: 1;
             max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
-            padding-top: 140px; /* Account for fixed header */
         }
 
         /* Sections */
@@ -1240,7 +1236,7 @@
             /* Header Mobile Optimization */
             .header {
                 padding: 15px 10px;
-                max-height: 140px;
+                margin-bottom: 15px;
             }
 
             .header-inner {
@@ -1325,7 +1321,6 @@
 
             .container {
                 padding: 10px;
-                padding-top: 160px; /* Increased for mobile header height */
             }
             
             /* Section Mobile Optimization */
@@ -1578,7 +1573,7 @@
     <!-- Neural Network Background -->
     <canvas id="neuralCanvas"></canvas>
 
-    <!-- Header - FIXED OUTSIDE CONTAINER -->
+    <!-- Header - NORMAL HEADER THAT SCROLLS WITH PAGE -->
     <header class="header">
         <div class="header-inner">
             <div class="header-content">
@@ -1627,7 +1622,7 @@
         </div>
     </header>
 
-    <!-- Container - NOW POSITIONED BELOW HEADER -->
+    <!-- Container - NORMAL FLOW AFTER HEADER -->
     <div class="container">
         <!-- Hero Section -->
         <section class="section hero" id="hero">
